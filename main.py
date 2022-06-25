@@ -8,11 +8,12 @@ import pandas_datareader.data as web
 
 stock_ticker = input('Enter a Stock Ticker: ').upper()
 initial_investment = input("Enter an inital investment in dollars: ")
-start_string = input('Enter a date in the FORMAT: {Month/Day/Year}: ')
+start_string = input('Enter a date in the FORMAT: {M/D/YYYY}: ')
 
 start = dt.datetime.strptime(start_string, "%m/%d/%Y")
 end = dt.datetime.today()
 timediff = (end-start).days
+
 
 end_string = end.strftime("%m/%d/%Y")
 
