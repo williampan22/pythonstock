@@ -8,6 +8,7 @@ import pandas_datareader
 import pandas_datareader.data as web   
 from pandas_datareader._utils import RemoteDataError 
 
+
 valid_ticker = False
 valid_investment = False
 valid_date = False
@@ -19,13 +20,15 @@ while valid_ticker == False:
         break
     except RemoteDataError: 
         print('That was not a valid stock ticker. Try again...' )
+    except KeyError: 
+        print('That was not a valid stock ticker. Try again...' )
 
 while valid_investment == False: 
     try: 
         initial_investment = input("Enter an inital investment in dollars (eg. 1000): ")
         test1 = float(initial_investment)
 
-        if float(initial_investment) < 0:
+        if float(initial_investment) <= 0:
             negativeError = ValueError('a should be a positive number')
             raise negativeError
         break
@@ -41,6 +44,7 @@ while valid_date == False:
         break
     except ValueError: 
         print('That was not a valid date. Try again...')
+    
 
 end = dt.datetime.today()
 timediff = (end-start).days
@@ -50,6 +54,7 @@ end_string = end.strftime("%m/%d/%Y")
 df = web.DataReader(stock_ticker, 'yahoo', start, end).reset_index()
 
 adj_closings = df['Adj Close']
+date = df['Date']
 
 current_price = adj_closings.iloc[-1]
 first_price = adj_closings.iloc[0]
@@ -76,9 +81,27 @@ print("If you bought $" + initial_investment + " of " + stock_ticker + " stock o
 print(stock_ticker + " closed at $" + str(first_price_rounded) + " on " + start_string + " and closed at $" + str(current_price_rounded) + " today (" + end_string + "). The price difference is " + str(pricediff_rounded))
 print("The profit/loss from buying " + stock_ticker + " on " + start_string + " with an initial investment of $" + initial_investment + " would be $" + str(profit_rounded))
 print("This is a RETURN ON INVESTMENT (ROI) OF " + str(roi_rounded) + "%! You would now have $" + str(money_now_rounded) + ' compared to the inital investment of $' + initial_investment+ '!')
-print("NOTE: these calculations account for stock splits and divident reinvestment!")
+print("NOTE: these calculations account for stock splits!")
 print('---------------------------------------------------------')
 
+
+adj_closings_list = adj_closings.tolist()
+date_list = date.tolist()
+date_list = [x for x in date_list if (x-start).days %30 == 0 ]
+
+
+plt.plot(range(len(adj_closings_list)), adj_closings_list)
+ax = plt.subplot()
+#ax.set_xticks((date_list))
+#ax.set_xticklabels(date_list, rotation = 30)
+plt.title(stock_ticker + "Closing Price vs Time")
+plt.xlabel('Date')
+plt.ylabel('Price')
+
+
+
+
+plt.show()
 
 
 
