@@ -4,20 +4,51 @@ import pandas as pd
 import matplotlib.pyplot as plt 
 from matplotlib import style 
 import pandas as pd
-import pandas_datareader.data as web    
+import pandas_datareader
+import pandas_datareader.data as web   
+from pandas_datareader._utils import RemoteDataError 
 
-stock_ticker = input('Enter a Stock Ticker: ').upper()
-initial_investment = input("Enter an inital investment in dollars: ")
-start_string = input('Enter a date in the FORMAT: {M/D/YYYY}: ')
+valid_ticker = False
+valid_investment = False
+valid_date = False
 
-start = dt.datetime.strptime(start_string, "%m/%d/%Y")
+while valid_ticker == False: 
+    try: 
+        stock_ticker = input('Enter a Stock Ticker (eg. AAPL): ').upper()
+        test = web.DataReader(stock_ticker, 'yahoo', dt.datetime(2022, 1, 1), dt.datetime.today()).reset_index()
+        break
+    except RemoteDataError: 
+        print('That was not a valid stock ticker. Try again...' )
+
+while valid_investment == False: 
+    try: 
+        initial_investment = input("Enter an inital investment in dollars (eg. 1000): ")
+        test1 = float(initial_investment)
+
+        if float(initial_investment) < 0:
+            negativeError = ValueError('a should be a positive number')
+            raise negativeError
+        break
+    except ValueError: 
+        print('That was not a valid number. Make sure your investment is positive. Try again...')
+    except negativeError: 
+        print('Your initial investment cannot be a negative amount of money. Try again...')
+
+while valid_date == False: 
+    try: 
+        start_string = input('Enter a date in the FORMAT: {M/D/YYYY} (eg: 1/1/2022): ')
+        start = dt.datetime.strptime(start_string, "%m/%d/%Y")
+        break
+    except ValueError: 
+        print('That was not a valid date. Try again...')
+
 end = dt.datetime.today()
 timediff = (end-start).days
 
 
 end_string = end.strftime("%m/%d/%Y")
-
 df = web.DataReader(stock_ticker, 'yahoo', start, end).reset_index()
+
 adj_closings = df['Adj Close']
 
 current_price = adj_closings.iloc[-1]
@@ -40,11 +71,13 @@ roi_rounded = round(roi, 2)
 money_now = float(initial_investment) + profit
 money_now_rounded = round(money_now, 2)
 
+print('---------------------------------------------------------')
 print("If you bought $" + initial_investment + " of " + stock_ticker + " stock on " + start_string + ", you would have been able to buy " + str(shares_rounded) + " shares.")
 print(stock_ticker + " closed at $" + str(first_price_rounded) + " on " + start_string + " and closed at $" + str(current_price_rounded) + " today (" + end_string + "). The price difference is " + str(pricediff_rounded))
 print("The profit/loss from buying " + stock_ticker + " on " + start_string + " with an initial investment of $" + initial_investment + " would be $" + str(profit_rounded))
 print("This is a RETURN ON INVESTMENT (ROI) OF " + str(roi_rounded) + "%! You would now have $" + str(money_now_rounded) + ' compared to the inital investment of $' + initial_investment+ '!')
 print("NOTE: these calculations account for stock splits and divident reinvestment!")
+print('---------------------------------------------------------')
 
 
 
