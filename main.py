@@ -29,7 +29,7 @@ while valid_investment == False:
         test1 = float(initial_investment)
 
         if float(initial_investment) <= 0:
-            negativeError = ValueError('a should be a positive number')
+            negativeError = ValueError('Initial investment should be a positive number')
             raise negativeError
         break
     except ValueError: 
@@ -94,7 +94,7 @@ plt.plot(range(len(adj_closings_list)), adj_closings_list)
 ax = plt.subplot()
 #ax.set_xticks((date_list))
 #ax.set_xticklabels(date_list, rotation = 30)
-plt.title(stock_ticker + "Closing Price vs Time")
+plt.title(stock_ticker + " Closing Price vs Time")
 plt.xlabel('Date')
 plt.ylabel('Price')
 
