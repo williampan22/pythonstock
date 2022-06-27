@@ -8,15 +8,16 @@ import pandas_datareader
 import pandas_datareader.data as web   
 from pandas_datareader._utils import RemoteDataError 
 
-
 valid_ticker = False
 valid_investment = False
 valid_date = False
 
 while valid_ticker == False: 
     try: 
+        #str_arr = input('Enter stock tickers: ').split(',') 
+        #arr = [num.strip().upper() for num in str_arr]
         stock_ticker = input('Enter a Stock Ticker (eg. AAPL): ').upper()
-        test = web.DataReader(stock_ticker, 'yahoo', dt.datetime(2022, 1, 1), dt.datetime.today()).reset_index()
+        test = web.DataReader(stock_ticker, 'yahoo', dt.datetime(2022, 1, 1), dt.datetime.today())
         break
     except RemoteDataError: 
         print('That was not a valid stock ticker. Try again...' )
@@ -51,10 +52,10 @@ timediff = (end-start).days
 
 
 end_string = end.strftime("%m/%d/%Y")
-df = web.DataReader(stock_ticker, 'yahoo', start, end).reset_index()
+df = web.DataReader( stock_ticker, 'yahoo', start, end)
 
 adj_closings = df['Adj Close']
-date = df['Date']
+
 
 current_price = adj_closings.iloc[-1]
 first_price = adj_closings.iloc[0]
@@ -86,23 +87,18 @@ print('---------------------------------------------------------')
 
 
 adj_closings_list = adj_closings.tolist()
-date_list = date.tolist()
-date_list = [x for x in date_list if (x-start).days %30 == 0 ]
 
-
-plt.plot(range(len(adj_closings_list)), adj_closings_list)
-ax = plt.subplot()
-#ax.set_xticks((date_list))
-#ax.set_xticklabels(date_list, rotation = 30)
+adj_closings_graph = df['Adj Close']
+adj_closings_graph.plot()
 plt.title(stock_ticker + " Closing Price vs Time")
 plt.xlabel('Date')
-plt.ylabel('Price')
+plt.ylabel('Adjusted Closing Price')
 
 
 
 
 plt.show()
 
-
+print(df.head())
 
 
