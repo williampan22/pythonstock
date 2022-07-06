@@ -61,10 +61,13 @@ df = web.DataReader( stock_ticker, 'yahoo', start, end)
 
 adj_closings = df['Adj Close']
 
-returns = adj_closings.pct_change()
+returns = df['Adj Close']
+for i in range(len(stock_ticker)): 
+    start_price = returns[stock_ticker[i]].iloc[0]
+    returns[stock_ticker[i]] = (returns[stock_ticker[i]] - start_price) / start_price * float(initial_investment)
 
 print(returns)
-
+print(adj_closings)
 #print(adj_closings.head())
 #print(adj_closings[stock_ticker[0]].iloc[0])
 
@@ -107,12 +110,6 @@ plt.ylabel("Adjusted Closing Price")
 plt.title("Stock Closing Prices vs Time")
 plt.show()
 
-returns.plot()
-plt.xlabel("Date")
-ax = plt.subplot()
-plt.ylabel("returns")
-plt.title("returns")
-plt.show()
 
 
 
