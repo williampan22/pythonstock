@@ -18,13 +18,16 @@ while valid_ticker == False:
         str_arr = input('Enter stock tickers: ').split(',') 
         stock_ticker = [num.strip().upper() for num in str_arr]
         
-        
-        test = web.DataReader(stock_ticker, 'yahoo', dt.datetime(2022, 1, 1), dt.datetime.today())
+        for i in range(len(stock_ticker)): 
+            broken_ticker = stock_ticker[i]
+            test = web.DataReader(stock_ticker[i], 'yahoo', dt.datetime(2022, 1, 1), dt.datetime.today())
+            
+            
         break
     except RemoteDataError: 
-        print('That was not a valid stock ticker. Try again...' )
+        print(broken_ticker + ' was not a valid stock ticker. Try again...' )
     except KeyError: 
-        print('That was not a valid stock ticker. Try again...' )
+        print(broken_ticker + ' was not a valid stock ticker. Try again...' )
 
 while valid_investment == False: 
     try: 
@@ -58,10 +61,12 @@ df = web.DataReader( stock_ticker, 'yahoo', start, end)
 
 adj_closings = df['Adj Close']
 
-print(adj_closings.head())
+returns = adj_closings.pct_change()
 
+print(returns)
 
-print(adj_closings[stock_ticker[0]].iloc[0])
+#print(adj_closings.head())
+#print(adj_closings[stock_ticker[0]].iloc[0])
 
 for i in range(len(stock_ticker)): 
     current_ticker = stock_ticker[i]
@@ -85,6 +90,8 @@ for i in range(len(stock_ticker)):
     money_now = float(initial_investment) + profit
     money_now_rounded = round(money_now, 2)
 
+
+
     print('---------------------------------------------------------')
     print("If you bought $" + initial_investment + " of " + current_ticker + " stock on " + start_string + ", you would have been able to buy " + str(shares_rounded) + " shares for an average price of " + str(first_price_rounded) +  ".")
     print("The return from buying " + current_ticker + " on " + start_string + " with an initial investment of $" + initial_investment + " would be $" + str(profit_rounded) + " for a ROI of " + str(roi_rounded) + "%!. You would now have $" + str(money_now_rounded) + ".")
@@ -93,12 +100,23 @@ print('---------------------------------------------------------')
 print("NOTE: these calculations account for stock splits!")
 
 
-
 adj_closings.plot()
 plt.xlabel("Date")
+ax = plt.subplot()
 plt.ylabel("Adjusted Closing Price")
 plt.title("Stock Closing Prices vs Time")
 plt.show()
+
+returns.plot()
+plt.xlabel("Date")
+ax = plt.subplot()
+plt.ylabel("returns")
+plt.title("returns")
+plt.show()
+
+
+
+
 
 # adj_closings_list = adj_closings.tolist()
 # adj_closings_graph = df['Adj Close']
