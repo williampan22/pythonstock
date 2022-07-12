@@ -1,4 +1,5 @@
 import datetime as dt
+from fileinput import nextfile
 from mimetypes import init
 import pandas as pd
 import matplotlib.pyplot as plt 
@@ -103,11 +104,28 @@ print('---------------------------------------------------------')
 print("NOTE: these calculations account for stock splits!")
 
 
-adj_closings.plot()
+plt.figure(figsize=(12, 6))
+plt.subplot(1, 2, 1)
+plt.plot(adj_closings)
+#adj_closings.plot()
 plt.xlabel("Date")
-ax = plt.subplot()
 plt.ylabel("Adjusted Closing Price")
 plt.title("Stock Closing Prices vs Time")
+plt.legend(stock_ticker)
+plt.xticks(rotation = 45)
+#plt.show()
+
+plt.subplot(1, 2, 2)
+#returns.plot()
+plt.plot(returns)
+plt.xlabel("Date")
+plt.ylabel("Return On Investment ($)")
+plt.title(" Dollar ROI From $" + str(initial_investment))
+plt.legend(stock_ticker)
+plt.xticks(rotation = 45)
+
+plt.subplots_adjust(wspace = .2)
+
 plt.show()
 
 
