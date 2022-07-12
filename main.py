@@ -67,8 +67,6 @@ for i in range(len(stock_ticker)):
     start_price = returns[stock_ticker[i]].iloc[0]
     returns[stock_ticker[i]] = (returns[stock_ticker[i]] - start_price) / start_price * float(initial_investment)
 
-print(returns)
-print(adj_closings)
 #print(adj_closings.head())
 #print(adj_closings[stock_ticker[0]].iloc[0])
 
@@ -107,16 +105,13 @@ print("NOTE: these calculations account for stock splits!")
 plt.figure(figsize=(12, 6))
 plt.subplot(1, 2, 1)
 plt.plot(adj_closings)
-#adj_closings.plot()
 plt.xlabel("Date")
 plt.ylabel("Adjusted Closing Price")
 plt.title("Stock Closing Prices vs Time")
 plt.legend(stock_ticker)
 plt.xticks(rotation = 45)
-#plt.show()
 
 plt.subplot(1, 2, 2)
-#returns.plot()
 plt.plot(returns)
 plt.xlabel("Date")
 plt.ylabel("Return On Investment ($)")
@@ -132,19 +127,5 @@ plt.show()
 
 
 
-
-# adj_closings_list = adj_closings.tolist()
-# adj_closings_graph = df['Adj Close']
-# adj_closings_graph.plot()
-# plt.title(stock_ticker + " Closing Price vs Time")
-# plt.xlabel('Date')
-# plt.ylabel('Adjusted Closing Price')
-
-
-
-
-# plt.show()
-
-# print(df.head())
 
 
