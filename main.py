@@ -8,6 +8,7 @@ import pandas as pd
 import pandas_datareader
 import pandas_datareader.data as web   
 from pandas_datareader._utils import RemoteDataError 
+import numpy as np
 
 valid_ticker = False
 valid_investment = False
@@ -16,7 +17,7 @@ num_stocks = 0
 
 while valid_ticker == False: 
     try: 
-        str_arr = input('Enter stock tickers: ').split(',') 
+        str_arr = input('Enter stock tickers seperated by commas (eg. aapl, amzn): ').split(',') 
         stock_ticker = [num.strip().upper() for num in str_arr]
         
         for i in range(len(stock_ticker)): 
@@ -62,10 +63,23 @@ df = web.DataReader( stock_ticker, 'yahoo', start, end)
 
 adj_closings = df['Adj Close']
 
+#dollar roi return for each day based on inital investment
 returns = df['Adj Close']
 for i in range(len(stock_ticker)): 
     start_price = returns[stock_ticker[i]].iloc[0]
     returns[stock_ticker[i]] = (returns[stock_ticker[i]] - start_price) / start_price * float(initial_investment)
+
+
+daily_returns = adj_closings.pct_change()
+correlation = daily_returns.corr()
+print(correlation)
+
+std = daily_returns.std()
+bar_std_height = []
+for i in stock_ticker: 
+    bar_std_height.append(std[i])
+
+bar_roi_height = []
 
 #print(adj_closings.head())
 #print(adj_closings[stock_ticker[0]].iloc[0])
@@ -86,8 +100,10 @@ for i in range(len(stock_ticker)):
     profit = shares * pricediff
     profit_rounded = round(profit, 2)
 
+    #roi percentage based off inital investment
     roi = profit / float(initial_investment) * 100
     roi_rounded = round(roi, 2)
+    bar_roi_height.append(roi_rounded)
 
     money_now = float(initial_investment) + profit
     money_now_rounded = round(money_now, 2)
@@ -103,7 +119,7 @@ print("NOTE: these calculations account for stock splits!")
 
 
 plt.figure(figsize=(12, 6))
-plt.subplot(1, 2, 1)
+plt.subplot(2, 2, 1)
 plt.plot(adj_closings)
 plt.xlabel("Date")
 plt.ylabel("Adjusted Closing Price")
@@ -111,7 +127,7 @@ plt.title("Stock Closing Prices vs Time")
 plt.legend(stock_ticker)
 plt.xticks(rotation = 45)
 
-plt.subplot(1, 2, 2)
+plt.subplot(2, 2, 2)
 plt.plot(returns)
 plt.xlabel("Date")
 plt.ylabel("Return On Investment ($)")
@@ -119,7 +135,24 @@ plt.title(" Dollar ROI From $" + str(initial_investment))
 plt.legend(stock_ticker)
 plt.xticks(rotation = 45)
 
-plt.subplots_adjust(wspace = .2)
+plt.subplot(2, 2, 3)
+plt.bar(range(len(stock_ticker)), bar_std_height)
+plt.xticks(range(len(stock_ticker)), stock_ticker)
+plt.xlabel('Stocks')
+plt.ylabel('Standard Deviation')
+plt.title('Risk Stock Levels')
+
+plt.subplot(2, 2, 4)
+plt.bar(range(len(stock_ticker)), bar_roi_height)
+plt.xticks(range(len(stock_ticker)), stock_ticker)
+plt.xlabel('Stocks')
+plt.ylabel('ROI (%)')
+plt.title('RETURN ON INVESTMENT (%)')
+
+
+
+
+plt.subplots_adjust(wspace = .2, hspace = .6)
 
 plt.show()
 
