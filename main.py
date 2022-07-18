@@ -14,6 +14,7 @@ valid_ticker = False
 valid_investment = False
 valid_date = False
 num_stocks = 0
+stock_highs = []
 
 while valid_ticker == False: 
     try: 
@@ -89,6 +90,7 @@ for i in range(len(stock_ticker)):
     current_price = adj_closings[stock_ticker[i]].iloc[-1]
     first_price = adj_closings[stock_ticker[i]].iloc[0]
     pricediff = current_price - first_price
+    stock_highs.append(adj_closings[stock_ticker[i]].max())
 
     current_price_rounded = round(current_price, 2)
     first_price_rounded = round(first_price, 2)
@@ -110,6 +112,9 @@ for i in range(len(stock_ticker)):
 
 
 
+
+
+
     print('---------------------------------------------------------')
     print("If you bought $" + initial_investment + " of " + current_ticker + " stock on " + start_string + ", you would have been able to buy " + str(shares_rounded) + " shares for an average price of " + str(first_price_rounded) +  ".")
     print("The return from buying " + current_ticker + " on " + start_string + " with an initial investment of $" + initial_investment + " would be $" + str(profit_rounded) + " for a ROI of " + str(roi_rounded) + "%!. You would now have $" + str(money_now_rounded) + ".")
@@ -117,6 +122,7 @@ for i in range(len(stock_ticker)):
 print('---------------------------------------------------------')
 print("NOTE: these calculations account for stock splits!")
 
+print(stock_highs)
 
 plt.figure(figsize=(12, 6))
 plt.subplot(2, 2, 1)
@@ -149,10 +155,24 @@ plt.xlabel('Stocks')
 plt.ylabel('ROI (%)')
 plt.title('RETURN ON INVESTMENT (%)')
 
-
-
-
 plt.subplots_adjust(wspace = .2, hspace = .6)
+
+#fibonacci
+
+plt.figure(figsize=(12, 6))
+plt.subplots_adjust(wspace = .2, hspace = .6)
+plt.suptitle("Adjusted Closing Prices", fontsize=12, y=0.95)
+plt.xticks(rotation = 45)
+
+for i, ticker in enumerate(stock_ticker):
+    
+    ax = plt.subplot(2, 2, i + 1)
+    adj_closings[ticker].plot(ax=ax)
+    ax.set_title(ticker.upper())
+    
+    
+
+
 
 plt.show()
 
