@@ -14,7 +14,7 @@ valid_ticker = False
 valid_investment = False
 valid_date = False
 num_stocks = 0
-stock_highs = [[], []]
+extrema = [[], [], [], []]
 
 while valid_ticker == False: 
     try: 
@@ -90,9 +90,12 @@ for i in range(len(stock_ticker)):
     current_price = adj_closings[stock_ticker[i]].iloc[-1]
     first_price = adj_closings[stock_ticker[i]].iloc[0]
     pricediff = current_price - first_price
-    stock_highs[0].append(adj_closings[stock_ticker[i]].max())
-    #fix getting date-column index
-    #stock_highs[1].append(dt.date.adj_closings[stock_ticker[i]].max())
+    #extrema: max price, min price, max price date, min price date
+    extrema[0].append(adj_closings[stock_ticker[i]].max())
+    extrema[1].append(adj_closings[stock_ticker[i]].min())
+    extrema[2].append(adj_closings.index[adj_closings[stock_ticker[i]] == adj_closings[stock_ticker[i]].max()].tolist())
+    extrema[3].append(adj_closings.index[adj_closings[stock_ticker[i]] == adj_closings[stock_ticker[i]].min()].tolist())
+    
 
     current_price_rounded = round(current_price, 2)
     first_price_rounded = round(first_price, 2)
@@ -124,7 +127,7 @@ for i in range(len(stock_ticker)):
 print('---------------------------------------------------------')
 print("NOTE: these calculations account for stock splits!")
 
-print(stock_highs)
+print(extrema)
 
 plt.figure(figsize=(12, 6))
 plt.subplot(2, 2, 1)
@@ -170,7 +173,13 @@ for i, ticker in enumerate(stock_ticker):
     
     ax = plt.subplot(2, 2, i + 1)
     adj_closings[ticker].plot(ax=ax)
-    plt.axhline(y=stock_highs[0][i], color='r', linestyle='-')
+    plt.axhline(y=extrema[0][i], color='r', linestyle='-')
+    plt.axhline(y=extrema[1][i], color='r', linestyle='-')
+
+    plt.axhline(y= (extrema[0][i] - (extrema[1][i] * .382)) , color='r', linestyle='-')
+    plt.axhline(y= (extrema[0][i] - (extrema[1][i] * .5)) , color='r', linestyle='-')
+    plt.axhline(y= (extrema[0][i] - (extrema[1][i] * .618)) , color='r', linestyle='-')
+
     #ax.hlines(y=stock_highs[0][i], xmin=stock_highs[1][i], xmax=dt.datetime.today(), linewidth=2, color='r')
     ax.set_title(ticker.upper())
     
