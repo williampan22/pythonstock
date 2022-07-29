@@ -32,6 +32,8 @@ while valid_ticker == False:
     except KeyError: 
         print(broken_ticker + ' was not a valid stock ticker. Try again...' )
 
+stock_ticker.append("SPY")
+
 while valid_investment == False: 
     try: 
         initial_investment = input("Enter an inital investment in dollars (eg. 1000): ")
@@ -63,6 +65,8 @@ end_string = end.strftime("%m/%d/%Y")
 df = web.DataReader( stock_ticker, 'yahoo', start, end)
 
 adj_closings = df['Adj Close']
+
+
 
 #dollar roi return for each day based on inital investment
 returns = df['Adj Close']
@@ -176,12 +180,14 @@ for i, ticker in enumerate(stock_ticker):
     # plt.axhline(y=extrema[0][i], color='r', linestyle='-')
     # plt.axhline(y=extrema[1][i], color='r', linestyle='-')
 
-    ax.hlines(y=extrema[0][i], xmin=extrema[2][i], xmax=dt.datetime.today(), linewidth=2, color='r')
-    ax.hlines(y=extrema[1][i], xmin=extrema[3][i], xmax=dt.datetime.today(), linewidth=2, color='r')
+    ax.hlines(y=extrema[0][i], xmin=extrema[2][i], xmax=dt.datetime.today(), linewidth=2, alpha = .5,  color='red')
+    ax.hlines(y=extrema[1][i], xmin=extrema[2][i], xmax=dt.datetime.today(), linewidth=2, alpha = .5, color='purple')
 
-    # plt.axhline(y= (extrema[0][i] - (extrema[1][i] * .382)) , color='r', linestyle='-')
-    # plt.axhline(y= (extrema[0][i] - (extrema[1][i] * .5)) , color='r', linestyle='-')
-    # plt.axhline(y= (extrema[0][i] - (extrema[1][i] * .618)) , color='r', linestyle='-')
+    difference = extrema[0][i] - extrema[1][i]
+    ax.hlines(y=extrema[0][i] - difference * .382, xmin=extrema[2][i], xmax=dt.datetime.today(), linewidth=2, alpha = .5, color='orange', linestyle='--')
+    ax.hlines(y=extrema[0][i] - difference * .5, xmin=extrema[2][i], xmax=dt.datetime.today(), linewidth=2, alpha = .5, color='yellow', linestyle='--')
+    ax.hlines(y=extrema[0][i] - difference * .618, xmin=extrema[2][i], xmax=dt.datetime.today(), linewidth=2, alpha = .5, color='green', linestyle='--')
+    
 
     #ax.hlines(y=stock_highs[0][i], xmin=stock_highs[1][i], xmax=dt.datetime.today(), linewidth=2, color='r')
     ax.set_title(ticker.upper())
