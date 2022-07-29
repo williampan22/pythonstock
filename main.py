@@ -136,31 +136,27 @@ print(extrema)
 plt.figure(figsize=(12, 6))
 plt.subplot(2, 2, 1)
 plt.plot(adj_closings)
-plt.xlabel("Date")
-plt.ylabel("Adjusted Closing Price")
-plt.title("Stock Closing Prices vs Time")
+plt.ylabel("Price (USD)")
+plt.title("Stock Closing Prices")
 plt.legend(stock_ticker)
 plt.xticks(rotation = 45)
 
 plt.subplot(2, 2, 2)
 plt.plot(returns)
-plt.xlabel("Date")
-plt.ylabel("Return On Investment ($)")
-plt.title(" Dollar ROI From $" + str(initial_investment))
+plt.ylabel("Return On Investment (USD)")
+plt.title("Dollr ROI From $" + str(initial_investment))
 plt.legend(stock_ticker)
 plt.xticks(rotation = 45)
 
 plt.subplot(2, 2, 3)
 plt.bar(range(len(stock_ticker)), bar_std_height)
 plt.xticks(range(len(stock_ticker)), stock_ticker)
-plt.xlabel('Stocks')
 plt.ylabel('Standard Deviation')
 plt.title('Risk Stock Levels')
 
 plt.subplot(2, 2, 4)
 plt.bar(range(len(stock_ticker)), bar_roi_height)
 plt.xticks(range(len(stock_ticker)), stock_ticker)
-plt.xlabel('Stocks')
 plt.ylabel('ROI (%)')
 plt.title('RETURN ON INVESTMENT (%)')
 
@@ -177,19 +173,16 @@ for i, ticker in enumerate(stock_ticker):
     
     ax = plt.subplot(2, 2, i + 1)
     adj_closings[ticker].plot(ax=ax)
-    # plt.axhline(y=extrema[0][i], color='r', linestyle='-')
-    # plt.axhline(y=extrema[1][i], color='r', linestyle='-')
-
-    ax.hlines(y=extrema[0][i], xmin=extrema[2][i], xmax=dt.datetime.today(), linewidth=2, alpha = .5,  color='red')
-    ax.hlines(y=extrema[1][i], xmin=extrema[2][i], xmax=dt.datetime.today(), linewidth=2, alpha = .5, color='purple')
+    #ax.hlines(y=extrema[0][i],xmin=extrema[2][i], xmax=dt.datetime.today(),  linewidth=2, alpha = .5,  color='red')
+    plt.axhline(y=extrema[0][i], linewidth=2, alpha = .5,  color='red')
+    plt.axhline(y=extrema[1][i], linewidth=2, alpha = .5, color='purple')
 
     difference = extrema[0][i] - extrema[1][i]
-    ax.hlines(y=extrema[0][i] - difference * .382, xmin=extrema[2][i], xmax=dt.datetime.today(), linewidth=2, alpha = .5, color='orange', linestyle='--')
-    ax.hlines(y=extrema[0][i] - difference * .5, xmin=extrema[2][i], xmax=dt.datetime.today(), linewidth=2, alpha = .5, color='yellow', linestyle='--')
-    ax.hlines(y=extrema[0][i] - difference * .618, xmin=extrema[2][i], xmax=dt.datetime.today(), linewidth=2, alpha = .5, color='green', linestyle='--')
+    plt.axhline(y=extrema[0][i] - difference * .382,  linewidth=2, alpha = .5, color='orange', linestyle='--')
+    plt.axhline(y=extrema[0][i] - difference * .5,  linewidth=2, alpha = .5, color='yellow', linestyle='--')
+    plt.axhline(y=extrema[0][i] - difference * .618,  linewidth=2, alpha = .5, color='green', linestyle='--')
     
 
-    #ax.hlines(y=stock_highs[0][i], xmin=stock_highs[1][i], xmax=dt.datetime.today(), linewidth=2, color='r')
     ax.set_title(ticker.upper())
     
     
