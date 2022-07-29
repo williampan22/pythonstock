@@ -173,12 +173,15 @@ for i, ticker in enumerate(stock_ticker):
     
     ax = plt.subplot(2, 2, i + 1)
     adj_closings[ticker].plot(ax=ax)
-    plt.axhline(y=extrema[0][i], color='r', linestyle='-')
-    plt.axhline(y=extrema[1][i], color='r', linestyle='-')
+    # plt.axhline(y=extrema[0][i], color='r', linestyle='-')
+    # plt.axhline(y=extrema[1][i], color='r', linestyle='-')
 
-    plt.axhline(y= (extrema[0][i] - (extrema[1][i] * .382)) , color='r', linestyle='-')
-    plt.axhline(y= (extrema[0][i] - (extrema[1][i] * .5)) , color='r', linestyle='-')
-    plt.axhline(y= (extrema[0][i] - (extrema[1][i] * .618)) , color='r', linestyle='-')
+    ax.hlines(y=extrema[0][i], xmin=extrema[2][i], xmax=dt.datetime.today(), linewidth=2, color='r')
+    ax.hlines(y=extrema[1][i], xmin=extrema[3][i], xmax=dt.datetime.today(), linewidth=2, color='r')
+
+    # plt.axhline(y= (extrema[0][i] - (extrema[1][i] * .382)) , color='r', linestyle='-')
+    # plt.axhline(y= (extrema[0][i] - (extrema[1][i] * .5)) , color='r', linestyle='-')
+    # plt.axhline(y= (extrema[0][i] - (extrema[1][i] * .618)) , color='r', linestyle='-')
 
     #ax.hlines(y=stock_highs[0][i], xmin=stock_highs[1][i], xmax=dt.datetime.today(), linewidth=2, color='r')
     ax.set_title(ticker.upper())
