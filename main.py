@@ -131,8 +131,6 @@ for i in range(len(stock_ticker)):
 print('---------------------------------------------------------')
 print("NOTE: these calculations account for stock splits!")
 
-print(extrema)
-
 plt.figure(figsize=(12, 6))
 plt.subplot(2, 2, 1)
 plt.plot(adj_closings)
@@ -144,7 +142,7 @@ plt.xticks(rotation = 45)
 plt.subplot(2, 2, 2)
 plt.plot(returns)
 plt.ylabel("Return On Investment (USD)")
-plt.title("Dollr ROI From $" + str(initial_investment))
+plt.title("Dollar ROI From $" + str(initial_investment))
 plt.legend(stock_ticker)
 plt.xticks(rotation = 45)
 
